@@ -1,3 +1,5 @@
+[![SciJava CI](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/.github/workflows/.gitaction.yml/badge.svg)](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/.github/workflows/.gitaction.yml)/g README.md
+
 # TrackMate-MorphoLibJ
 
 A TrackMate detector that uses the watershed segmentation tool in the MorphoLibJ plugin to create objects to track.
