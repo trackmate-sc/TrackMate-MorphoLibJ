@@ -1,3 +1,5 @@
+[![](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/workflows/build-main.yml/badge.svg)](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/workflows/build-main.yml)
+
 [![SciJava CI](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/.github/workflows/.gitaction.yml/badge.svg)](https://github.com/tinevez/TrackMate-MorphoLibJ/actions/.github/workflows/.gitaction.yml)/g README.md
 
 # TrackMate-MorphoLibJ
