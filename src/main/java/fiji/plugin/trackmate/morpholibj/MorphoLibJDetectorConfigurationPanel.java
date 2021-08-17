@@ -58,6 +58,7 @@ import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Settings;
 import fiji.plugin.trackmate.detection.DetectionUtils;
 import fiji.plugin.trackmate.detection.SpotDetectorFactoryBase;
+import fiji.plugin.trackmate.gui.GuiUtils;
 import fiji.plugin.trackmate.gui.components.ConfigurationPanel;
 import fiji.plugin.trackmate.util.JLabelLogger;
 import fiji.plugin.trackmate.util.TMUtils;
@@ -263,6 +264,7 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		 * Listeners and specificities.
 		 */
 
+		GuiUtils.selectAllOnFocus( ftfTolerance );
 		btnPreview.addActionListener( e -> DetectionUtils.preview(
 				model,
 				settings,
