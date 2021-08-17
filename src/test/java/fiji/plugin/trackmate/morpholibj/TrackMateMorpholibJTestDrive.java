@@ -35,7 +35,7 @@ public class TrackMateMorpholibJTestDrive
 	{
 		UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 		ImageJ.main( args );
-		final String path = "samples/Merged.tif";
+		final String path = "samples/Cont1-1-Merged.tif";
 //		final String path = "samples/Cont1-1.tif";
 		IJ.openImage( path ).show();
 		new TrackMatePlugIn().run( null );

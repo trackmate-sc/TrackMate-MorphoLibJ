@@ -34,7 +34,7 @@ public class LoadTrackMateMorphoLibJTestDrive
 	{
 		UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 		ImageJ.main( args );
-		final String path = "samples/Merged.xml";
+		final String path = "samples/Cont1-1-Merged.xml";
 		new LoadTrackMatePlugIn().run( path );
 	}
 }
