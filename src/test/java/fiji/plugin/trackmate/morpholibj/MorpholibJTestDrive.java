@@ -123,15 +123,14 @@ public class MorpholibJTestDrive
 		final Model model = new Model();
 		model.setSpots( spots, false );
 
-		final Settings settings = new Settings();
-		settings.setFrom( imp );
+		final Settings settings = new Settings( imp );
 		settings.addSpotAnalyzerFactory( new SpotShapeAnalyzerFactory<>() );
 
 		final TrackMate trackmate = new TrackMate( model, settings );
 		trackmate.computeSpotFeatures( false );
 
 		final DisplaySettings ds = DisplaySettingsIO.readUserDefault();
-		final double[] autoMinMax = FeatureUtils.autoMinMax( model, settings, TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
+		final double[] autoMinMax = FeatureUtils.autoMinMax( model, TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
 		ds.setSpotColorBy( TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
 		ds.setSpotMinMax( autoMinMax[ 0 ], autoMinMax[ 1 ] );
 		final HyperStackDisplayer displayer = new HyperStackDisplayer( model, new SelectionModel( model ), imp, ds );
