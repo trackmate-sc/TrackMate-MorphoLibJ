@@ -83,8 +83,6 @@
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
-
-		<javaGeom.version>0.11.1</javaGeom.version>
 	</properties>
 
 	<dependencies>
@@ -100,11 +98,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
-			<artifactId>imagej</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>imagej-deprecated</artifactId>
+			<artifactId>imagej-common</artifactId>
 		</dependency>
 
 		<!-- ImgLib2 dependencies -->
@@ -129,16 +123,8 @@
 			<artifactId>MorphoLibJ_</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>math.geom2d</groupId>
-			<artifactId>javaGeom</artifactId>
-			<version>${javaGeom.version}</version>
-		</dependency>
-
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
 		</dependency>
 	</dependencies>
 
