@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/trackmate-sc/TrackMate-MorphoLibJ/actions/workflows/build-main.yml/badge.svg)](https://github.com/trackmate-sc/TrackMate-MorphoLibJ/actions/workflows/build-main.yml)
+[![Build Status](https://github.com/trackmate-sc/TrackMate-MorphoLibJ/actions/workflows/build.yml/badge.svg)](https://github.com/trackmate-sc/TrackMate-MorphoLibJ/actions/workflows/build.yml)
 
 # TrackMate-MorphoLibJ
 
