@@ -95,9 +95,13 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 			+ "It works for 2D and 3D images, but return contours only for 2D images."
 			+ "<p>"
 			+ "If you use this detector for your work, please "
-			+ "also cite the MorphoLibJ paper: <i>Legland, D.; Arganda-Carreras, I. & Andrey, P. (2016), "
+			+ "also cite the MorphoLibJ paper: <a href=\"https://doi.org/10.1093/bioinformatics/btw413\">Legland, D.; Arganda-Carreras, I. & Andrey, P. (2016), "
 			+ "'MorphoLibJ: integrated library and plugins for mathematical morphology with ImageJ', "
-			+ "Bioinformatics (Oxford Univ Press) 32(22): 3532-3534.</i> "
+			+ "Bioinformatics (Oxford Univ Press) 32(22): 3532-3534.</a> "
+			+ "<p>"
+			+ "Documentation for this module "
+			+ "<a href=\"https://imagej.net/plugins/trackmate/trackmate-morpholibj\">on the ImageJ Wiki</a>."
+			+ "<p>"
 			+ "</html>";
 
 	/*
