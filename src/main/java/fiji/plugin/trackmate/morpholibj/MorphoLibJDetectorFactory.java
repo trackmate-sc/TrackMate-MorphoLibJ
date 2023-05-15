@@ -254,6 +254,12 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 	}
 
 	@Override
+	public boolean has3Dsegmentation()
+	{
+		return true;
+	}
+
+	@Override
 	public MorphoLibJDetectorFactory< T > copy()
 	{
 		return new MorphoLibJDetectorFactory<>();
