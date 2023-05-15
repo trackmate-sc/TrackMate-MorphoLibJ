@@ -118,7 +118,11 @@
 			<groupId>org.scijava</groupId>
 			<artifactId>scijava-common</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-mesh</artifactId>
+			<version>0.8.2-SNAPSHOT</version>
+		</dependency>
 		<!-- Other dependencies -->
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
