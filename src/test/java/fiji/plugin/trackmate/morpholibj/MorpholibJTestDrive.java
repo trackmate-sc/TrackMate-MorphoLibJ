@@ -31,7 +31,7 @@ import fiji.plugin.trackmate.SpotCollection;
 import fiji.plugin.trackmate.TrackMate;
 import fiji.plugin.trackmate.detection.LabelImageDetector;
 import fiji.plugin.trackmate.features.FeatureUtils;
-import fiji.plugin.trackmate.features.spot.SpotShapeAnalyzerFactory;
+import fiji.plugin.trackmate.features.spot.Spot2DShapeAnalyzerFactory;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackMateObject;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettingsIO;
@@ -124,14 +124,14 @@ public class MorpholibJTestDrive
 		model.setSpots( spots, false );
 
 		final Settings settings = new Settings( imp );
-		settings.addSpotAnalyzerFactory( new SpotShapeAnalyzerFactory<>() );
+		settings.addSpotAnalyzerFactory( new Spot2DShapeAnalyzerFactory<>() );
 
 		final TrackMate trackmate = new TrackMate( model, settings );
 		trackmate.computeSpotFeatures( false );
 
 		final DisplaySettings ds = DisplaySettingsIO.readUserDefault();
-		final double[] autoMinMax = FeatureUtils.autoMinMax( model, TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
-		ds.setSpotColorBy( TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
+		final double[] autoMinMax = FeatureUtils.autoMinMax( model, TrackMateObject.SPOTS, Spot2DShapeAnalyzerFactory.AREA );
+		ds.setSpotColorBy( TrackMateObject.SPOTS, Spot2DShapeAnalyzerFactory.AREA );
 		ds.setSpotMinMax( autoMinMax[ 0 ], autoMinMax[ 1 ] );
 		final HyperStackDisplayer displayer = new HyperStackDisplayer( model, new SelectionModel( model ), imp, ds );
 		displayer.render();
