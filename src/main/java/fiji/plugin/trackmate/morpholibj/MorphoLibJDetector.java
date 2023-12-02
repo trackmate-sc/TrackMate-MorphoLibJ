@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -64,16 +64,20 @@ public class MorphoLibJDetector< T extends RealType< T > & NativeType< T > > imp
 
 	private final boolean simplify;
 
+	private final double smoothingScale;
+
 	public MorphoLibJDetector(
 			final ImgPlus< T > img,
 			final Interval interval,
 			final double tolerance,
 			final Connectivity connectivity,
-			final boolean simplify )
+			final boolean simplify,
+			final double smoothingScale )
 	{
 		this.img = img;
 		this.tolerance = tolerance;
 		this.connectivity = connectivity;
+		this.smoothingScale = smoothingScale;
 		this.interval = DetectionUtils.squeeze( interval );
 		this.simplify = simplify;
 		this.baseErrorMessage = BASE_ERROR_MESSAGE;
@@ -113,7 +117,12 @@ public class MorphoLibJDetector< T extends RealType< T > & NativeType< T > > imp
 		final Img< T > labelImage = ImageJFunctions.wrap( resultImage );
 		final double[] calibration = TMUtils.getSpatialCalibration( img );
 
-		final LabelImageDetector< T > lbldetector = new LabelImageDetector<>( labelImage, interval, calibration, simplify );
+		final LabelImageDetector< T > lbldetector = new LabelImageDetector<>(
+				labelImage,
+				interval,
+				calibration,
+				simplify,
+				smoothingScale );
 		if ( !lbldetector.checkInput() || !lbldetector.process() )
 		{
 			errorMessage = baseErrorMessage + lbldetector.getErrorMessage();

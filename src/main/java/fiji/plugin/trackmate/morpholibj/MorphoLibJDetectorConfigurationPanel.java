@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -23,6 +23,7 @@ package fiji.plugin.trackmate.morpholibj;
 
 import static fiji.plugin.trackmate.detection.DetectorKeys.KEY_TARGET_CHANNEL;
 import static fiji.plugin.trackmate.detection.ThresholdDetectorFactory.KEY_SIMPLIFY_CONTOURS;
+import static fiji.plugin.trackmate.detection.ThresholdDetectorFactory.KEY_SMOOTHING_SCALE;
 import static fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
 import static fiji.plugin.trackmate.gui.Fonts.SMALL_FONT;
 import static fiji.plugin.trackmate.morpholibj.MorphoLibJDetectorFactory.KEY_CONNECTIVITY;
@@ -55,6 +56,7 @@ import fiji.plugin.trackmate.detection.DetectionUtils;
 import fiji.plugin.trackmate.detection.SpotDetectorFactoryBase;
 import fiji.plugin.trackmate.gui.GuiUtils;
 import fiji.plugin.trackmate.gui.components.ConfigurationPanel;
+import fiji.plugin.trackmate.gui.components.PanelSmoothContour;
 import fiji.plugin.trackmate.util.DetectionPreview;
 
 public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
@@ -75,6 +77,8 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 	private final JCheckBox chkboxSimplify;
 
 	private final JComboBox< Connectivity > cmbboxConnectivity;
+
+	private final PanelSmoothContour smoothingPanel;
 
 	public MorphoLibJDetectorConfigurationPanel( final Settings settings, final Model model )
 	{
@@ -161,7 +165,7 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		final GridBagConstraints gbcTolerance = new GridBagConstraints();
 		gbcTolerance.gridwidth = 2;
 		gbcTolerance.fill = GridBagConstraints.HORIZONTAL;
-		gbcTolerance.insets = new Insets( 5, 5, 5, 0 );
+		gbcTolerance.insets = new Insets( 5, 5, 5, 5 );
 		gbcTolerance.gridx = 1;
 		gbcTolerance.gridy = 3;
 		add( ftfTolerance, gbcTolerance );
@@ -212,6 +216,20 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		add( chkboxSimplify, gbcChkboxSimplify );
 
 		/*
+		 * Smoothing scale.
+		 */
+
+		smoothingPanel = new PanelSmoothContour( -1., model.getSpaceUnits() );
+		smoothingPanel.setFont( SMALL_FONT );
+		final GridBagConstraints gbcSmoothingPanel = new GridBagConstraints();
+		gbcSmoothingPanel.gridwidth = 2;
+		gbcSmoothingPanel.fill = GridBagConstraints.HORIZONTAL;
+		gbcSmoothingPanel.insets = new Insets( 0, 5, 5, 5 );
+		gbcSmoothingPanel.gridx = 0;
+		gbcSmoothingPanel.gridy = 6;
+		add( smoothingPanel, gbcSmoothingPanel );
+
+		/*
 		 * Logger.
 		 */
 
@@ -221,7 +239,7 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		gbcBtnPreview.fill = GridBagConstraints.BOTH;
 		gbcBtnPreview.insets = new Insets( 5, 5, 5, 5 );
 		gbcBtnPreview.gridx = 0;
-		gbcBtnPreview.gridy = 6;
+		gbcBtnPreview.gridy = 7;
 
 		final DetectionPreview detectionPreview = DetectionPreview.create()
 				.model( model )
@@ -286,6 +304,9 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		final boolean simplify = chkboxSimplify.isSelected();
 		settings.put( KEY_SIMPLIFY_CONTOURS, simplify );
 
+		final double scale = smoothingPanel.getScale();
+		settings.put( KEY_SMOOTHING_SCALE, scale );
+
 		return settings;
 	}
 
@@ -296,6 +317,9 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		ftfTolerance.setValue( settings.get( KEY_TOLERANCE ) );
 		cmbboxConnectivity.setSelectedItem( Connectivity.valueFor( ( int ) settings.get( KEY_CONNECTIVITY ) ) );
 		chkboxSimplify.setSelected( ( boolean ) settings.get( KEY_SIMPLIFY_CONTOURS ) );
+		final Object scaleObj = settings.get( KEY_SMOOTHING_SCALE );
+		final double scale = scaleObj == null ? -1. : ( ( Number ) scaleObj ).doubleValue();
+		smoothingPanel.setScale( scale );
 	}
 
 	@Override
