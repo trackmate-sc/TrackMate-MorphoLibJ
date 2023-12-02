@@ -33,6 +33,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.plugin.Duplicator;
 import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.label.LabelImages;
 import inra.ijpb.morphology.MinimaAndMaxima3D;
 import inra.ijpb.watershed.Watershed;
 import net.imagej.ImgPlus;
@@ -66,17 +67,21 @@ public class MorphoLibJDetector< T extends RealType< T > & NativeType< T > > imp
 
 	private final double smoothingScale;
 
+	private final boolean removeLargestObject;
+
 	public MorphoLibJDetector(
 			final ImgPlus< T > img,
 			final Interval interval,
 			final double tolerance,
 			final Connectivity connectivity,
+			final boolean removeLargestObject,
 			final boolean simplify,
 			final double smoothingScale )
 	{
 		this.img = img;
 		this.tolerance = tolerance;
 		this.connectivity = connectivity;
+		this.removeLargestObject = removeLargestObject;
 		this.smoothingScale = smoothingScale;
 		this.interval = DetectionUtils.squeeze( interval );
 		this.simplify = simplify;
@@ -112,6 +117,9 @@ public class MorphoLibJDetector< T extends RealType< T > & NativeType< T > > imp
 		final ImageStack imposedMinima = MinimaAndMaxima3D.imposeMinima( tp.getImageStack(), regionalMinima, conn );
 		final ImageStack labeledMinima = BinaryImages.componentsLabeling( regionalMinima, conn, 32 );
 		final ImageStack resultStack = Watershed.computeWatershed( imposedMinima, labeledMinima, conn, dams );
+
+		if ( removeLargestObject )
+			LabelImages.removeLargestLabel( resultStack );
 
 		final ImagePlus resultImage = new ImagePlus( "watershed", resultStack );
 		final Img< T > labelImage = ImageJFunctions.wrap( resultImage );

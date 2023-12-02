@@ -35,7 +35,7 @@ import static fiji.plugin.trackmate.util.TMUtils.checkOptionalParameter;
 import static fiji.plugin.trackmate.util.TMUtils.checkParameter;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +80,16 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 	public static final String KEY_CONNECTIVITY = "CONNECTIVITY";
 
 	public static final Integer DEFAULT_CONNECTIVITY = Connectivity.DIAGONAL.getConnectivity();
+
+	/**
+	 * The key to the parameter that determines whether the largest object found
+	 * by the morphological segmentation will be removed. This is particularly
+	 * useful when the input image contains a large background which
+	 * segmentation is not useful.
+	 */
+	public static final String KEY_REMOVE_LARGEST_OBJECT = "REMOVE_LARGEST_OBJECT";
+
+	public static final Boolean DEFAULT_REMOVE_LARGEST_OBJECT = Boolean.FALSE;
 
 	/** A string key identifying this factory. */
 	public static final String DETECTOR_KEY = "MORPHOLIBJ_DETECTOR";
@@ -130,6 +140,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 
 		final double tolerance = ( double ) settings.get( KEY_TOLERANCE );
 		final int conn = ( Integer ) settings.get( KEY_CONNECTIVITY );
+		final boolean remogeLargestObject = ( boolean ) settings.get( KEY_REMOVE_LARGEST_OBJECT );
 		final boolean simplify = ( boolean ) settings.get( KEY_SIMPLIFY_CONTOURS );
 		final Object smoothingObj = settings.get( KEY_SMOOTHING_SCALE );
 		final double smoothingScale = ( smoothingObj == null )
@@ -141,6 +152,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 				interval,
 				tolerance,
 				Connectivity.valueFor( conn ),
+				remogeLargestObject,
 				simplify,
 				smoothingScale );
 		return detector;
@@ -167,6 +179,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 		boolean ok = writeTargetChannel( settings, element, errorHolder );
 		ok = ok && writeAttribute( settings, element, KEY_TOLERANCE, Double.class, errorHolder );
 		ok = ok && writeAttribute( settings, element, KEY_CONNECTIVITY, Integer.class, errorHolder );
+		ok = ok && writeAttribute( settings, element, KEY_REMOVE_LARGEST_OBJECT, Boolean.class, errorHolder );
 		ok = ok && writeAttribute( settings, element, KEY_SIMPLIFY_CONTOURS, Boolean.class, errorHolder );
 		ok = ok && writeAttribute( settings, element, KEY_SMOOTHING_SCALE, Double.class, errorHolder );
 
@@ -185,6 +198,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 		ok = ok && readIntegerAttribute( element, settings, KEY_TARGET_CHANNEL, errorHolder );
 		ok = ok && readDoubleAttribute( element, settings, KEY_TOLERANCE, errorHolder );
 		ok = ok && readIntegerAttribute( element, settings, KEY_CONNECTIVITY, errorHolder );
+		ok = ok && readBooleanAttribute( element, settings, KEY_REMOVE_LARGEST_OBJECT, errorHolder );
 		ok = ok && readBooleanAttribute( element, settings, KEY_SIMPLIFY_CONTOURS, errorHolder );
 		ok = ok && readDoubleAttribute( element, settings, KEY_SMOOTHING_SCALE, errorHolder );
 
@@ -209,6 +223,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 		settings.put( KEY_TARGET_CHANNEL, DEFAULT_TARGET_CHANNEL );
 		settings.put( KEY_TOLERANCE, DEFAULT_TOLERANCE );
 		settings.put( KEY_CONNECTIVITY, DEFAULT_CONNECTIVITY );
+		settings.put( KEY_REMOVE_LARGEST_OBJECT, DEFAULT_REMOVE_LARGEST_OBJECT );
 		settings.put( KEY_SIMPLIFY_CONTOURS, Boolean.FALSE );
 		settings.put( KEY_SMOOTHING_SCALE, -1. );
 		return settings;
@@ -222,6 +237,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 		ok = ok & checkParameter( settings, KEY_TARGET_CHANNEL, Integer.class, errorHolder );
 		ok = ok & checkParameter( settings, KEY_TOLERANCE, Double.class, errorHolder );
 		ok = ok & checkParameter( settings, KEY_CONNECTIVITY, Integer.class, errorHolder );
+		ok = ok & checkOptionalParameter( settings, KEY_REMOVE_LARGEST_OBJECT, Boolean.class, errorHolder );
 		ok = ok & checkParameter( settings, KEY_SIMPLIFY_CONTOURS, Boolean.class, errorHolder );
 		ok = ok & checkOptionalParameter( settings, KEY_SMOOTHING_SCALE, Double.class, errorHolder );
 		final List< String > mandatoryKeys = new ArrayList<>();
@@ -229,7 +245,7 @@ public class MorphoLibJDetectorFactory< T extends RealType< T > & NativeType< T 
 		mandatoryKeys.add( KEY_TOLERANCE );
 		mandatoryKeys.add( KEY_CONNECTIVITY );
 		mandatoryKeys.add( KEY_SIMPLIFY_CONTOURS );
-		final List< String > optionalKeys = Collections.singletonList( KEY_SMOOTHING_SCALE );
+		final List< String > optionalKeys = Arrays.asList( KEY_SMOOTHING_SCALE, KEY_REMOVE_LARGEST_OBJECT );
 		ok = ok & checkMapKeys( settings, mandatoryKeys, optionalKeys, errorHolder );
 		if ( !ok )
 			errorMessage = errorHolder.toString();
