@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -31,7 +31,7 @@ import fiji.plugin.trackmate.SpotCollection;
 import fiji.plugin.trackmate.TrackMate;
 import fiji.plugin.trackmate.detection.LabelImageDetector;
 import fiji.plugin.trackmate.features.FeatureUtils;
-import fiji.plugin.trackmate.features.spot.SpotShapeAnalyzerFactory;
+import fiji.plugin.trackmate.features.spot.Spot2DShapeAnalyzerFactory;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackMateObject;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettingsIO;
@@ -63,7 +63,6 @@ public class MorpholibJTestDrive
 		final ImagePlus imp = IJ.openImage( targetImagePath );
 		imp.show();
 
-		@SuppressWarnings( "unchecked" )
 		final ImgPlus< T > allChannels = TMUtils.rawWraps( imp );
 		final long targetChannel = 0;
 		final long targetFrame = 0;
@@ -71,12 +70,13 @@ public class MorpholibJTestDrive
 
 		final Interval interval = input;
 		// Intervals.createMinSize( 464, 82, 325, 233 );
-		
+
 		// Params.
 		final double tolerance = 30;
 		final int conn = 26; // 6 or 26
 		final boolean dams = false;
 		final boolean simplify = false;
+		final double smoothingScale = -1.;
 
 		/*
 		 * Execute segmentation.
@@ -93,7 +93,7 @@ public class MorpholibJTestDrive
 		 */
 		final ImagePlus tmp = ImageJFunctions.wrap( input, "frame=" + targetFrame + "_channel=" + targetChannel );
 		final ImagePlus tp = new Duplicator().run( tmp );
-		
+
 		final ImageStack regionalMinima = MinimaAndMaxima3D.extendedMinima( tp.getImageStack(), tolerance, conn );
 		final ImageStack imposedMinima = MinimaAndMaxima3D.imposeMinima( tp.getImageStack(), regionalMinima, conn );
 		final ImageStack labeledMinima = BinaryImages.componentsLabeling( regionalMinima, conn, 32 );
@@ -103,14 +103,19 @@ public class MorpholibJTestDrive
 		final Img< T > labelImage = ImageJFunctions.wrap( resultImage );
 		final double[] calibration = TMUtils.getSpatialCalibration( allChannels );
 
-		final LabelImageDetector< T > lbldetector = new LabelImageDetector<>( labelImage, interval, calibration, simplify );
+		final LabelImageDetector< T > lbldetector = new LabelImageDetector<>(
+				labelImage,
+				interval,
+				calibration,
+				simplify,
+				smoothingScale );
 		if ( !lbldetector.checkInput() || !lbldetector.process() )
 		{
 			System.err.println( lbldetector.getErrorMessage() );
 			return;
 		}
 		final List< Spot > spots0 = lbldetector.getResult();
-		
+
 		/*
 		 * Display results.
 		 */
@@ -124,14 +129,14 @@ public class MorpholibJTestDrive
 		model.setSpots( spots, false );
 
 		final Settings settings = new Settings( imp );
-		settings.addSpotAnalyzerFactory( new SpotShapeAnalyzerFactory<>() );
+		settings.addSpotAnalyzerFactory( new Spot2DShapeAnalyzerFactory<>() );
 
 		final TrackMate trackmate = new TrackMate( model, settings );
 		trackmate.computeSpotFeatures( false );
 
 		final DisplaySettings ds = DisplaySettingsIO.readUserDefault();
-		final double[] autoMinMax = FeatureUtils.autoMinMax( model, TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
-		ds.setSpotColorBy( TrackMateObject.SPOTS, SpotShapeAnalyzerFactory.AREA );
+		final double[] autoMinMax = FeatureUtils.autoMinMax( model, TrackMateObject.SPOTS, Spot2DShapeAnalyzerFactory.AREA );
+		ds.setSpotColorBy( TrackMateObject.SPOTS, Spot2DShapeAnalyzerFactory.AREA );
 		ds.setSpotMinMax( autoMinMax[ 0 ], autoMinMax[ 1 ] );
 		final HyperStackDisplayer displayer = new HyperStackDisplayer( model, new SelectionModel( model ), imp, ds );
 		displayer.render();
