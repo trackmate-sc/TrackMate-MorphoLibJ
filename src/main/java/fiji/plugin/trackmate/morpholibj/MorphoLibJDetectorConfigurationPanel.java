@@ -8,12 +8,12 @@
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -25,6 +25,7 @@ import static fiji.plugin.trackmate.detection.DetectorKeys.KEY_TARGET_CHANNEL;
 import static fiji.plugin.trackmate.detection.ThresholdDetectorFactory.KEY_SIMPLIFY_CONTOURS;
 import static fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
 import static fiji.plugin.trackmate.gui.Fonts.SMALL_FONT;
+import static fiji.plugin.trackmate.morpholibj.MorphoLibJDetectorFactory.ICON;
 import static fiji.plugin.trackmate.morpholibj.MorphoLibJDetectorFactory.KEY_CONNECTIVITY;
 import static fiji.plugin.trackmate.morpholibj.MorphoLibJDetectorFactory.KEY_TOLERANCE;
 
@@ -33,7 +34,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -64,8 +63,6 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 
 	private static final NumberFormat THRESHOLD_FORMAT = new DecimalFormat( "#.##" );
 
-	protected static final ImageIcon ICON = new ImageIcon( getResource( "images/TrackMateMorphoLibJ-logo-100px.png" ) );
-
 	private static final String TITLE = MorphoLibJDetectorFactory.NAME;
 
 	private final JSlider sliderChannel;
@@ -80,9 +77,8 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 	{
 		final GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 144, 0, 32 };
-		gridBagLayout.rowHeights = new int[] { 0, 84, 0, 27, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 84, 0, 27, 0, 0, 150 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0 };
-		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		setLayout( gridBagLayout );
 
 		final JLabel lblDetector = new JLabel( TITLE, ICON, JLabel.RIGHT );
@@ -107,7 +103,14 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 		gbcLblHelptext.insets = new Insets( 5, 5, 5, 5 );
 		gbcLblHelptext.gridx = 0;
 		gbcLblHelptext.gridy = 1;
-		add( GuiUtils.textInScrollPanel( GuiUtils.infoDisplay( MorphoLibJDetectorFactory.INFO_TEXT ) ), gbcLblHelptext );
+		gbcLblHelptext.weighty = 1.;
+		add( GuiUtils.textInScrollPanel( GuiUtils.infoDisplay(
+				MorphoLibJDetectorFactory.INFO_TEXT.replace( "</html>", "" )
+						+ "<html>Online documentation: <br/>"
+						+ "<a href='" + MorphoLibJDetectorFactory.DOC_URL + "'>"
+						+ MorphoLibJDetectorFactory.DOC_URL
+						+ "</a></html>" ) ),
+				gbcLblHelptext );
 
 		/*
 		 * Channel selector.
@@ -301,9 +304,4 @@ public class MorphoLibJDetectorConfigurationPanel extends ConfigurationPanel
 	@Override
 	public void clean()
 	{}
-
-	protected static URL getResource( final String name )
-	{
-		return MorphoLibJDetectorFactory.class.getClassLoader().getResource( name );
-	}
 }
